@@ -7,6 +7,7 @@ const saveController = {
       // player object
       const playerJson = await dataMapper.getOneUserJson(req.params.id);
       const player = playerJson.player;
+      delete player.password;
       // generators owned array of objects
       const generatorsOwnedJson = await dataMapper.getGeneratorsOwned(req.params.id);
       const generatorsOwned = generatorsOwnedJson.generators;
@@ -19,9 +20,9 @@ const saveController = {
       // init player bonus
       const playerBonus = {
         clic_flat_bonus: 0,
-        clic_percent_bonus: 0,
+        clic_percent_bonus: 1,
         idle_flat_bonus: 0,
-        idle_percent_bonus: 0,
+        idle_percent_bonus: 1,
       }
       // build generatorsOwned + calc bonus
       for (let i = 0; i < generatorsOwned.length; i++) {
@@ -29,7 +30,7 @@ const saveController = {
         // add number owned
         generatorsOwned[i].number_owned = generatorInfo.number_owned;
         // calc next cost
-        generatorsOwned[i].next_cost = generatorsOwned[i].starting_cost * Math.pow(generatorsOwned[i].cost_factor, generatorsOwned[i].number_owned);
+        generatorsOwned[i].next_cost = Math.floor(generatorsOwned[i].starting_cost * Math.pow(generatorsOwned[i].cost_factor, generatorsOwned[i].number_owned));
         // calc total value for each generator
         generatorsOwned[i].total_clic_flat = generatorsOwned[i].clic_flat_value * generatorsOwned[i].number_owned;
         generatorsOwned[i].total_clic_percent = generatorsOwned[i].clic_percent_value * generatorsOwned[i].number_owned;
@@ -47,9 +48,14 @@ const saveController = {
       // add generators not owned
       player.generatorsNotOwned = playerNotOwnsGenerator;
       // add player bonus to player values
-
-      // TODO
-
+      debug('------------START CALC--------------------');
+      debug('player.idle_value:', player.idle_value);
+      debug('player.click_value:', player.click_value);
+      player.idle_value += Math.floor(playerBonus.idle_flat_bonus * playerBonus.idle_percent_bonus);
+      player.click_value += Math.floor(playerBonus.clic_flat_bonus * playerBonus.clic_percent_bonus);
+      debug('bonus:', playerBonus);
+      debug('player idle value', player.idle_value);
+      debug('player click value', player.click_value);
       res.json(player);
     } catch (err) {
       debug(err);
