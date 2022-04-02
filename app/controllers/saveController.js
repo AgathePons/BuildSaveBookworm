@@ -35,7 +35,7 @@ const saveController = {
         generatorsOwned[i].total_clic_flat = generatorsOwned[i].clic_flat_value * generatorsOwned[i].number_owned;
         generatorsOwned[i].total_clic_percent = generatorsOwned[i].clic_percent_value * generatorsOwned[i].number_owned;
         generatorsOwned[i].total_idle_flat = generatorsOwned[i].idle_flat_value * generatorsOwned[i].number_owned;
-        generatorsOwned[i].total_idle_percent = generatorsOwned[i].idle_flat_value * generatorsOwned[i].number_owned;
+        generatorsOwned[i].total_idle_percent = generatorsOwned[i].idle_percent_value * generatorsOwned[i].number_owned;
         // calc total bonus
         playerBonus.clic_flat_bonus += generatorsOwned[i].total_clic_flat;
         playerBonus.clic_percent_bonus += generatorsOwned[i].total_clic_percent;
